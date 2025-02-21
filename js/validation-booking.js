@@ -1,62 +1,59 @@
-$(document).ready(function() {
-    $('#send_message').click(function(e) {
+$(document).ready(function () {
+    // Remove error class when input is clicked
+    $('#name, #email, #phone, #message').click(function () {
+        $(this).removeClass("error_input");
+    });
 
-        //Stop form submission & check the validation
+    $('#send_message').click(function (e) {
         e.preventDefault();
 
         // Variable declaration
         var error = false;
-        var name = $('#name').val();
-        var email = $('#email').val();
-        var phone = $('#phone').val();
-
-        $('#name,#email,#phone,#message').click(function() {
-            $(this).removeClass("error_input");
-        });
+        var name = $('#name').val().trim();
+        var email = $('#email').val().trim();
+        var phone = $('#phone').val().trim();
+        var message = $('#message').val().trim();
 
         // Form field validation
-        if (name.length == 0) {
-            var error = true;
+        if (name === '') {
+            error = true;
             $('#name').addClass("error_input");
-        } else {
-            $('#name').removeClass("error_input");
         }
-        if (email.length == 0 || email.indexOf('@') == '-1') {
-            var error = true;
+        if (email === '' || email.indexOf('@') === -1) {
+            error = true;
             $('#email').addClass("error_input");
-        } else {
-            $('#email').removeClass("error_input");
         }
-        if (phone.length == 0) {
-            var error = true;
+        if (phone === '') {
+            error = true;
             $('#phone').addClass("error_input");
-        } else {
-            $('#phone').removeClass("error_input");
+        }
+        if (message === '') {
+            error = true;
+            $('#message').addClass("error_input");
         }
 
-        // If there is no validation error, next to process the mail function
-        if (error == false) {
-            // Disable submit button just after the form processed 1st time successfully.
-            $('#send_message').attr({
-                'disabled': 'true',
-                'value': 'Sending...'
+        // Stop execution if validation fails
+        if (error) return;
+
+        // Disable button and update text
+        $('#send_message').prop("disabled", true).val("Sending...");
+
+        // Simulate form submission delay
+        setTimeout(() => {
+            // Fade out form and show success message (from HTML)
+            $('#booking_form').fadeOut(500, function () {
+                $('#success_message_col').fadeIn(500);
             });
 
-            /* Post Ajax function of jQuery to get all the data from the submission of the form as soon as the form sends the values to booking.php*/
-            $.post("booking.php", $("#booking_form").serialize(), function(result) {
-                //Check the result set from booking.php file.
-                if (result == 'sent') {
-                    //If the email is sent successfully, remove the submit button
-                    $('#booking_form').remove();
-                    //Display the success message
-                    $('#success_message_col').fadeIn(500);
-                } else {
-                    //Display the error message
-                    $('#mail_fail').fadeIn(500);
-                    // Enable the submit button again
-                    $('#send_message').removeAttr('disabled').attr('value', 'Send The Message');
-                }
-            });
-        }
+        }, 2000);
+    });
+
+    // Show form again when "Reorder Again" button is clicked
+    $('#reorder_button').click(function () {
+        $('#success_message_col').fadeOut(500, function () {
+            $('#booking_form').fadeIn(500);
+            $('#send_message').prop("disabled", false).val("Send The Message");
+            $('#booking_form').fadeIn(500)[0].reset(); // Clear form fields
+        });
     });
 });
