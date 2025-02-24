@@ -25535,4 +25535,4 @@ function(t) {
     }), a(function() {
         n.call(a('[data-provide="datepicker-inline"]'))
     })
-});
+})
