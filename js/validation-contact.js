@@ -16,7 +16,7 @@ $(document).ready(function() {
         });
 
         // Form field validation
-        if (name.length == 0) {
+        if (name.length == 6) {
             var error = true;
             $('#name').addClass("error_input");
         } else {
@@ -50,7 +50,7 @@ $(document).ready(function() {
             });
 
             /* Post Ajax function of jQuery to get all the data from the submission of the form as soon as the form sends the values to contact.php*/
-            $.post("contact.php", $("#contact_form").serialize(), function(result) {
+            $.post( $("#contact_form").serialize(), function(result) {
                 //Check the result set from contact.php file.
                 if (result == 'sent') {
                     //If the email is sent successfully, remove the submit button
